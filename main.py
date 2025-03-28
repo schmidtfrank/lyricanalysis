@@ -2,6 +2,8 @@ import pandas as pd
 import re
 import unicodedata
 import nltk
+from nltk.stem import PorterStemmer
+from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 #TODO
 #word stemming
@@ -18,12 +20,16 @@ class LyricSoftware:
     #initialize internal dataset in the constructor
     def __init__(self):
         self.df = pd.read_csv("Songs.csv")
+        self.stemmer = PorterStemmer()
         pass
 
     #TODO word stemming
     #probably use nltk.stem?
     def stem(self):
-        pass
+        for i in self.df.index:
+            words = word_tokenize(self.df.iat[i, 2])
+            stemmed_words = [self.stemmer.stem(word) for word in words]
+            self.df.iat[i, 2] = " ".join(stemmed_words)
 
     def normalizeText(self,text):
         #handle unicode
@@ -59,6 +65,10 @@ class LyricSoftware:
 
 l = LyricSoftware()
 l.preprocess()
-
+print("======PRE-STEMMING OUTPUT======\n")
+print(l.df.iat[1,2])
+print("\n")
+l.stem()
+print("======POST-STEMMING OUTPUT======\n")
 print(l.df.iat[1,2])
 
