@@ -31,29 +31,29 @@ class LyricSoftware:
     
     #preprocess
     def preprocess(self):
-        replaceDict = {"EmbedShare URLCopyEmbedCopy" : "", "\n" : " "}
+        replaceDict = {"embedshare urlcopyembedcopy" : "", "\n" : " "}
 
         punctuation = "1234567890.,?!;:-'\"*()[]"
         pattern = f"[{re.escape(punctuation)}]"
         stop_words = stopwords.words('english')
 
         for i in self.df.index:
-            #first regex remove punctuation chars
-            self.df.iat[i,2] = self.normalizeText(self.df.iat[i,2])
-            self.df.iat[i,2] = re.sub(pattern, "",self.df.iat[i,2])
-            for key, value in replaceDict.items():
-                #now remove bigger phrase and newlines
-                self.df.iat[i,2] = self.df.iat[i,2].replace(key,value)
             #lowercase
             self.df.iat[i,2] = self.df.iat[i,2].lower()
 
             for word in stop_words:
                 #remove stop words
                 self.df.iat[i,2] = re.sub(r"\b" + re.escape(word) + r"\b", "", self.df.iat[i,2])
+        
+            #regex remove punctuation chars
+            self.df.iat[i,2] = self.normalizeText(self.df.iat[i,2])
+            self.df.iat[i,2] = re.sub(pattern, " ",self.df.iat[i,2])
+            for key, value in replaceDict.items():
+                #now remove bigger phrase and newlines
+                self.df.iat[i,2] = self.df.iat[i,2].replace(key,value)
             
             #finally remove all trailing/duplicate white space
             self.df.iat[i,2] = re.sub(r"\s+", " ", self.df.iat[i,2]).strip()
-
 
 
 
@@ -61,3 +61,4 @@ l = LyricSoftware()
 l.preprocess()
 
 print(l.df.iat[1,2])
+
