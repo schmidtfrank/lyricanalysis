@@ -21,6 +21,7 @@ class LyricSoftware:
         pass
 
     #TODO word stemming
+    #probably use nltk.stem?
     def stem(self):
         pass
 
