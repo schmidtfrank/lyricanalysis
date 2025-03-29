@@ -2,9 +2,15 @@ import pandas as pd
 import re
 import unicodedata
 import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
+from textblob import TextBlob  # For sentiment analysis
+
+
+
 #TODO
 #word stemming
 #use wordblob? for sentiment analysis on lyrics
@@ -60,6 +66,21 @@ class LyricSoftware:
             
             #finally remove all trailing/duplicate white space
             self.df.iat[i,2] = re.sub(r"\s+", " ", self.df.iat[i,2]).strip()
+    
+
+    def analyzeSentiment(self):
+        """Calculate sentiment polarity for each song lyric and add it as a new column."""
+        sentiments = []
+        for i in self.df.index:
+
+            lyric = self.df.iat[i, 2]
+            # Compute sentiment polarity with TextBlob
+            sentiment_score = TextBlob(lyric).sentiment.polarity
+            sentiments.append(sentiment_score)
+        self.df['Sentiment'] = sentiments
+    
+
+    
 
 
 
@@ -71,4 +92,8 @@ print("\n")
 l.stem()
 print("======POST-STEMMING OUTPUT======\n")
 print(l.df.iat[1,2])
+
+l.analyzeSentiment()
+print("======DATAFRAME WITH SENTIMENT SCORES======\n")
+print(l.df[['Title', 'Sentiment']])
 
