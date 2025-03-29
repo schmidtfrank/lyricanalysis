@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual environment
+venv/
+
+# MacOS
+.DS_Store
+
+# CSV or other local data files (optional, if Songs.csv is generated or contains local-only data)
+Songs.csv
+
+# Environment
+.python-version
+
+# Logs
+*.log
+
+# IDE/editor configs
+.vscode/
+.idea/
