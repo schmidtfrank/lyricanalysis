@@ -7,14 +7,7 @@ nltk.download('stopwords')
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-from textblob import TextBlob  # For sentiment analysis
-
-
-
-#TODO
-#word stemming
-#use wordblob? for sentiment analysis on lyrics
-
+from textblob import TextBlob 
 
 #future?
 #integrate genius api for song searching based on our "hub"
@@ -29,8 +22,6 @@ class LyricSoftware:
         self.stemmer = PorterStemmer()
         pass
 
-    #TODO word stemming
-    #probably use nltk.stem?
     def stem(self):
         for i in self.df.index:
             words = word_tokenize(self.df.iat[i, 2])
@@ -79,6 +70,11 @@ class LyricSoftware:
             sentiments.append(sentiment_score)
         self.df['Sentiment'] = sentiments
     
+    def normalizeSentiment(self):
+        self.mu = self.df["Sentiment"].mean()
+        self.sigma = self.df["Sentiment"].std()
+        self.df["normalizedSentiment"] = (self.df["Sentiment"] - self.mu) / self.sigma
+    
 
     
 
@@ -97,3 +93,7 @@ l.analyzeSentiment()
 print("======DATAFRAME WITH SENTIMENT SCORES======\n")
 print(l.df[['Title', 'Sentiment']])
 
+
+print("Normalized Sentiment Scores")
+l.normalizeSentiment()
+print(l.df[["Title","Sentiment","normalizedSentiment"]])
