@@ -124,7 +124,7 @@ class LyricSoftware:
         relevances = {}
         
         for index, row in self.df.iterrows():
-            doc = row[2]
+            doc = row.iloc[2]
             relevance = self.tfidf_score(query,doc)
             relevances[index] = relevance 
         return relevances
@@ -135,7 +135,7 @@ class LyricSoftware:
 
         relevances = self.execute_search_TF_IDF(query)
 
-        tmpDF = self.df
+        tmpDF = self.df.copy()
         tmpDF["sentimentDiff"] = np.abs(tmpDF["normalizedSentiment"] - normalizedSentiment)
         
         largestRel = sorted(relevances, key=relevances.get,reverse=True)[:5]
@@ -168,10 +168,13 @@ print(l.df[["Title","Sentiment","normalizedSentiment"]])
 
 print("====SEARCH IN REGARD TO SENTIMENT AND TFIDF====")
 l.build_vocabulary()
-query = "words not in vocabulary or something"
+query = "yeah part one why is it so hard to live part two i shouldnt have done what i did part three everyone left me alone part four i dont want to live anymore yeah"
 l.adapt_vocab_query(query)
 l.compute_IDF(l.df.shape[0],l.df["Lyrics"])
 sentiments, tfidfs = l.queryOnBoth(query)
 
+print("Sentimentally Similarity")
 print(sentiments)
-print(tfidfs)
+
+print("TFIDF Similarity")
+print(l.df.iloc[tfidfs])
